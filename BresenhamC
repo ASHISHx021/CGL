@@ -1,0 +1,56 @@
+#include <GL/glut.h>
+
+// Function to draw a circle using Bresenham's incremental algorithm for the first quadrant
+void drawCircle(int radius) {
+    int x = 0, y = radius;
+    int limit = 0;
+    int a = 2 * (1 - radius);
+
+    glBegin(GL_POINTS);
+    while (y >= limit) {
+        // Plot the points in the first quadrant
+        glVertex2i(x, y);
+        glVertex2i(y, x);
+
+        if (a <= 0) {
+            if (2 * (a + y) - 1 <= 0)
+                x += 1;
+            else
+                y -= 1;
+            a += 2 * x + 1;
+        } else {
+            y -= 1;
+            a += 2 * (x - y) + 1;
+        }
+    }
+    glEnd();
+}
+
+// Function to display rendering
+void display() {
+    glClear(GL_COLOR_BUFFER_BIT);
+    glColor3f(1.0, 1.0, 1.0); // Set color to white
+    glPointSize(2.0); // Set point size
+    glLoadIdentity();
+
+    drawCircle(100); // Change the radius as per your requirement
+
+    glFlush();
+}
+
+// Initialize OpenGL settings
+void init() {
+    glClearColor(0.0, 0.0, 0.0, 0.0); // Set clear color to black
+    gluOrtho2D(0, 200, 0, 200); // Set coordinate system
+}
+
+int main(int argc, char** argv) {
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+    glutInitWindowSize(400, 400); // Set window size
+    glutCreateWindow("Circle Drawing using Bresenham's Algorithm");
+    init();
+    glutDisplayFunc(display);
+    glutMainLoop();
+    return 0;
+}
