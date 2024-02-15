@@ -1,7 +1,7 @@
 #include <GL/glut.h>
 #include <cmath>
 
-// Function to draw a circle using DDA algorithm
+// Function to Draw a circle using DDA algorithm
 void drawCircle(int radius) {
     float x = 0, y = radius;
     float epsilon = 1.0 / radius;
