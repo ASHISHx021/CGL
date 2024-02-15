@@ -1,0 +1,54 @@
+#include <GL/glut.h>
+#include <cmath>
+
+// Function to draw a circle using DDA algorithm
+void drawCircle(int radius) {
+    float x = 0, y = radius;
+    float epsilon = 1.0 / radius;
+
+    glBegin(GL_POINTS);
+    while (y >= x) {
+        // Plot the points of the circle
+        glVertex2f(x, y);
+        glVertex2f(-x, y);
+        glVertex2f(x, -y);
+        glVertex2f(-x, -y);
+        glVertex2f(y, x);
+        glVertex2f(-y, x);
+        glVertex2f(y, -x);
+        glVertex2f(-y, -x);
+
+        x += epsilon * y;
+        y -= epsilon * x;
+    }
+    glEnd();
+}
+
+// Function to display rendering
+void display() {
+    glClear(GL_COLOR_BUFFER_BIT);
+    glColor3f(1.0, 1.0, 1.0); // Set color to white
+    glPointSize(2.0); // Set point size
+    glLoadIdentity();
+
+    drawCircle(100); // Change the radius as per your requirement
+
+    glFlush();
+}
+
+// Initialize OpenGL settings
+void init() {
+    glClearColor(0.0, 0.0, 0.0, 0.0); // Set clear color to black
+    gluOrtho2D(-200, 200, -200, 200); // Set coordinate system
+}
+
+int main(int argc, char** argv) {
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+    glutInitWindowSize(400, 400); // Set window size
+    glutCreateWindow("Circle Drawing using DDA Algorithm");
+    init();
+    glutDisplayFunc(display);
+    glutMainLoop();
+    return 0;
+}
