@@ -90,7 +90,7 @@ void display1()
  
   void clearScreen()
   {
-   //usleep(2000);
+   sleep(2);
    glClearColor(0.0,0.0,0.0,1.0);
    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
    }
@@ -145,53 +145,143 @@ void lclip()
         x[i]=xx[i];
         y[i]=yy[i];
     }
+     x[i]=x[0];
+     y[i]=y[0]; 
+ }
+ void rclip()
+  {
+      int k=0;
+      slope();
+    for(i=0;i<n;i++)
+     {
+        if(x[i]<xmax&&x[i+1]<xmax)
+         {
+           xx[k]=x[i+1];
+           yy[k]=y[i+1];
+           k++;
+         }
+       else if(x[i]<xmax&&x[i+1]>xmax)
+         {
+           xx[k]=xmax;
+           yy[k]=y[i]+m[i]*(xmax-x[i]);
+           k++;
+         }  
+        else if(x[i]>xmax&&x[i+1]<xmax)
+          {
+             xx[k]=xmax;
+             yy[k]=y[i]+m[i]*(xmax-x[i]);
+             k++;
+            xx[k]=x[i+1];
+             yy[k]=y[i+1];
+            k++;
+          }
+        }
+          n=k;
+     for(i=0;i<n;i++)
+          {
+           x[i]=xx[i];
+           y[i]=yy[i];
+           } 
+           x[i]=x[0];
+           y[i]=y[0]; 
+         
  }
  
-/*void rclip()
-{
-  int k=0;
-    slope();
-  for(i=0;i<n;i++)
+void topclip()
+  {
+     int k=0;
+     slope();
+   for(i=0;i<n;i++)
     {
-     if(xmin>x[i]&&xmin>x[i+1])
-      {
+      if(y[i]<ymax&&y[i+1]<xmax)
+       {
          xx[k]=x[i+1];
          yy[k]=y[i+1];
          k++;
-      }
-     else if(x[i]<xmin&&x[i+1]>xmin)
-      {
-           xx[k]=xmin;
-           yy[k]=y[i]+m[i]*(xmin-x[i]);
-           k++;
-       }  
-      else if(x[i]>xmin&&x[i+1]<xmin)
+       }
+      else if(y[i]<xmax&&y[i+1]>xmax)
        {
-             xx[k]=xmin;
-           yy[k]=y[i]+m[i]*(xmin-x[i]);
+         yy[k]=ymax;
+         xx[k]=(1/m[i])*(ymax-y[i+1])+x[i+1];                                                   
+         k++;
+       }  
+      else if(y[i]>ymax&&y[i+1]<ymax)
+       {
+         xx[k]=(1/m[i])*(ymax-y[i])+x[i];                                          
+         yy[k]=ymax;
+         k++;
+         xx[k]=x[i+1];
+         yy[k]=y[i+1];
+         k++;
+       }
+    }
+       n=k;
+   for(i=0;i<n;i++)
+     {
+       x[i]=xx[i];
+       y[i]=yy[i];
+     }
+       x[i]=x[0];
+       y[i]=y[0];
+ }
+ 
+void bottomclip()
+ {
+      int k=0;
+      slope();
+      for(i=0;i<n;i++)
+      {
+     if(y[i]>ymin&&y[i+1]>ymin)
+       {
+         xx[k]=x[i+1];
+         yy[k]=y[i+1];
+         k++;
+        }
+     else if(y[i]>ymin&&y[i+1]<ymin)
+         {  yy[k]=ymin;
+           xx[k]=(1/m[i])*(ymin-y[i])+x[i];
+        
            k++;
-           
+         }  
+      else if(y[i]<ymin&&y[i+1]>ymin)
+          {
+            yy[k]=ymin;
+           xx[k]=(1/m[i])*(ymin-y[i])+x[i];
+
+           k++;
            xx[k]=x[i+1];
           yy[k]=y[i+1];
           k++;
-       }
+          }
+      }
+          n=k;
+   for(i=0;i<n;i++)
+     {
+           x[i]=xx[i];
+           y[i]=yy[i];
      }
-         n=k;
-    for(i=0;i<n;i++)
-      {
-        x[i]=xx[i];
-        y[i]=yy[i];
+          x[i]=x[0];
+           y[i]=y[0];
     }
- }
- */
+           
+ 
 void display()
 {
-	//display1();
-	//clearScreen();
-	lclip();
-	//rclip();
 	display1();
-	//ClearScreen();
+	clearScreen();
+	lclip();
+	display1();
+	clearScreen();
+	rclip();
+	display1();
+	clearScreen();
+	topclip();
+	display1();
+	clearScreen();
+	bottomclip();
+	display1();
+	
+
 	//glFlush();
 	
 }
@@ -208,4 +298,3 @@ void display()
        glutMainLoop();
       return 0;
   }
-
